@@ -49,7 +49,7 @@
 			const params = new URLSearchParams(window.location.search);
 			return params.get('id');
 		}
-		fetch('posts.json')
+		fetch('data/posts.json')
 			.then(res => res.json())
 			.then(posts => {
 				const id = getPostId();

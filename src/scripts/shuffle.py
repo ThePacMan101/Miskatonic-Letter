@@ -2,9 +2,9 @@ import json
 import random
 
 # Caminho do arquivo JSON de entrada
-input_file = "../posts.json"
+input_file = "../data/posts.json"
 # Caminho do arquivo JSON de saída
-output_file = "../posts.json"
+output_file = "../data/posts.json"
 
 # Lê o JSON
 with open(input_file, "r", encoding="utf-8") as f:

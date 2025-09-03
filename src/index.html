@@ -122,8 +122,8 @@
     let currentPage = 1;
     let posts = [];
 
-    // Load posts.json
-    fetch('posts.json')
+    // Load data/posts.json
+    fetch('data/posts.json')
       .then(res => res.json())
       .then(data => {
         posts = data;

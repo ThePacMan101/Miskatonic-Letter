@@ -1,7 +1,7 @@
 import json
 
 # Caminho do arquivo JSON
-input_file = "../posts.json"
+input_file = "../data/posts.json"
 
 # Lê o JSON
 with open(input_file, "r", encoding="utf-8") as f:
