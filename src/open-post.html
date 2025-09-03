@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Miskatonic Letter · Post</title>
+	<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+	<header class="topbar">
+		<div class="container topbar__inner">
+			<a class="brand" href="index.html">
+				<img src="imgs/elder-sign.png" alt="" class="brand__logo" aria-hidden="true">
+				<span class="brand__name">Miskatonic<span class="accent">Letter</span></span>
+			</a>
+			<form class="search" action="#" method="get" role="search">
+				<input class="search__input" type="search" name="q" placeholder="Search theories, rituals, manifestos…" aria-label="Search" />
+			</form>
+			<nav class="usernav" aria-label="User">
+				<a class="btn btn--ghost" href="#">Login</a>
+				<a class="btn btn--primary" href="#">Join the Circle</a>
+			</nav>
+		</div>
+	</header>
+
+	<main class="container layout">
+		<section class="content" style="width:100%">
+			<div id="post-content">
+				<!-- Post will be loaded here by JS -->
+			</div>
+			<a href="index.html" class="btn" style="margin-top:18px;display:inline-block">← Back to Forum</a>
+		</section>
+	</main>
+
+	<footer class="footer">
+		<div class="container footer__inner">
+			<p>© 2025 Miskatonic Letter.</p>
+			<nav class="footer__links">
+				<a href="#">Forum Charter</a>
+				<a href="#">Occult FAQ</a>
+				<a href="#">Contact the Admins</a>
+			</nav>
+		</div>
+	</footer>
+
+	<script>
+		// Get post id from URL
+		function getPostId(){
+			const params = new URLSearchParams(window.location.search);
+			return params.get('id');
+		}
+		fetch('posts.json')
+			.then(res => res.json())
+			.then(posts => {
+				const id = getPostId();
+				const post = posts.find(p => p.id === id);
+				if(!post){
+					document.getElementById('post-content').innerHTML = '<p>Post not found.</p>';
+					return;
+				}
+				document.title = post.title + ' · Miskatonic Letter';
+								// Show all lines except the first as post content
+								const contentHtml = post.content.slice(1).map(line => `<div>${line}</div>`).join('');
+								document.getElementById('post-content').innerHTML = `
+									<article class="thread card" role="article">
+										<div class="thread__main">
+											<div class="thread__row">
+												<span class="badge badge--${post.badge.type}" title="${post.badge.title}">${post.badge.label}</span>
+												<span class="thread__title">${post.title}</span>
+											</div>
+											<div class="thread__meta">
+												<span class="author">
+													<span class="avatar" aria-hidden="true">${post.author.avatar}</span>
+													<span class="author__name">${post.author.name}</span>
+												</span>
+												<time datetime="${post.date}">${formatDate(post.date)}</time>
+												<span class="dot" aria-hidden="true">•</span>
+												${post.tags.map(tag => `<a href="#" class="tag">${tag}</a>`).join('')}
+											</div>
+											<hr style="border:1px solid #333;margin:10px 0;">
+											<div class="thread__excerpt">${post.content[0]}</div>
+											<div class="thread__content" style="margin-top:10px;">${contentHtml}</div>
+										</div>
+										<ul class="thread__stats">
+											<li><span class="stat__label">Views</span><strong>${post.stats.views}</strong></li>
+											<li><span class="stat__label">Replies</span><strong>${post.stats.replies}</strong></li>
+											<li><span class="stat__label">Credibility</span><strong>${post.stats.credibility}</strong></li>
+										</ul>
+									</article>
+								`;
+			});
+		function formatDate(dateStr){
+			const d = new Date(dateStr);
+			return d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+		}
+	</script>
+</body>
+</html>
