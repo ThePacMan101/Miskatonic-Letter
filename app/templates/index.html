@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Miskatonic Letter · Occult & Conspiracy Forum</title>
-  <link rel="stylesheet" href="../static/styles.css" />
+  <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -12,9 +12,9 @@
   <!-- Top Nav -->
   <header class="topbar">
     <div class="container topbar__inner">
-      <a class="brand" href="#">
+      <a class="brand" href="{{ url_for('index') }}">
         <!-- logo image -->
-        <img src="/static/imgs/elder-sign.png" alt="" class="brand__logo" aria-hidden="true">
+        <img src="{{ url_for('static', path='imgs/elder-sign.png') }}" alt="" class="brand__logo" aria-hidden="true">
         <span class="brand__name">Miskatonic<span class="accent">Letter</span></span>
       </a>
 
@@ -93,17 +93,58 @@
         </div>
       </div>
 
-      <!-- Thread List -->
-      <div class="threads" id="threads" role="feed" aria-busy="false">
-        <!-- Posts will be loaded here by JS -->
+      <div class="threads" role="feed" aria-busy="false">
+        {% for post in posts %}
+          <article class="thread card" role="article">
+            <div class="thread__main">
+              <div class="thread__row">
+                <span class="badge badge--{{ post.badge.type }}" title="{{ post.badge.title }}">{{ post.badge.label }}</span>
+                <a href="{{ url_for('post_detail', id=post.id) }}" class="thread__title" data-id="{{ post.id }}">{{ post.title }}</a>
+              </div>
+              <p class="thread__excerpt">{{ post.content[0] }}</p>
+              <div class="thread__meta">
+                <span class="author">
+                  <span class="avatar" aria-hidden="true">{{ post.author.avatar }}</span>
+                  <a href="#" class="author__name">{{ post.author.name }}</a>
+                </span>
+                <time datetime="{{ post.date }}">{{ post.date }}</time>
+                <span class="dot" aria-hidden="true">•</span>
+                {% for tag in post.tags %}
+                  <a href="#" class="tag">{{ tag }}</a>
+                {% endfor %}
+              </div>
+            </div>
+            <ul class="thread__stats">
+              <li><span class="stat__label">Views</span><strong>{{ post.stats.views }}</strong></li>
+              <li><span class="stat__label">Replies</span><strong>{{ post.stats.replies }}</strong></li>
+              <li><span class="stat__label">Credibility</span><strong>{{ post.stats.credibility }}</strong></li>
+            </ul>
+          </article>
+        {% endfor %}
       </div>
-
-      <!-- Pagination -->
-      <nav class="pagination" id="pagination" aria-label="Pagination">
-        <!-- Pagination will be loaded by JS -->
+      <nav class="pagination" aria-label="Pagination">
+        {% if page > 1 %}
+          <a class="page" href="{{ url_for('index') }}?page={{ page - 1 }}">Prev</a>
+        {% else %}
+          <span class="page is-disabled">Prev</span>
+        {% endif %}
+        {% for p in range(1, total_pages + 1) %}
+          {% if p == page %}
+            <span class="page is-current">{{ p }}</span>
+          {% else %}
+            <a class="page" href="{{ url_for('index') }}?page={{ p }}">{{ p }}</a>
+          {% endif %}
+        {% endfor %}
+        {% if page < total_pages %}
+          <a class="page" href="{{ url_for('index') }}?page={{ page + 1 }}">Next</a>
+        {% else %}
+          <span class="page is-disabled">Next</span>
+        {% endif %}
+      </nav>
       </nav>
     </section>
   </main>
+
 
   <footer class="footer">
     <div class="container footer__inner">
@@ -115,102 +156,5 @@
       </nav>
     </div>
   </footer>
-
-  <script>
-    // Config
-  const POSTS_PER_PAGE = 5;
-    let currentPage = 1;
-    let posts = [];
-
-    // Load data/posts.json
-    fetch('../data/posts.json')
-      .then(res => res.json())
-      .then(data => {
-        posts = data;
-        renderPosts();
-        renderPagination();
-      });
-
-    function renderPosts() {
-      const threads = document.getElementById('threads');
-      threads.innerHTML = '';
-      const start = (currentPage - 1) * POSTS_PER_PAGE;
-      const end = start + POSTS_PER_PAGE;
-      const pagePosts = posts.slice(start, end);
-      pagePosts.forEach(post => {
-        const article = document.createElement('article');
-        article.className = 'thread card';
-        article.setAttribute('role', 'article');
-        article.innerHTML = `
-          <div class="thread__main">
-            <div class="thread__row">
-              <span class="badge badge--${post.badge.type}" title="${post.badge.title}">${post.badge.label}</span>
-              <a href="post.html?id=${post.id}" class="thread__title" data-id="${post.id}">${post.title}</a>
-            </div>
-            <p class="thread__excerpt">${post.content[0]}</p>
-            <div class="thread__meta">
-              <span class="author">
-                <span class="avatar" aria-hidden="true">${post.author.avatar}</span>
-                <a href="#" class="author__name">${post.author.name}</a>
-              </span>
-              <time datetime="${post.date}">${formatDate(post.date)}</time>
-              <span class="dot" aria-hidden="true">•</span>
-              ${post.tags.map(tag => `<a href="#" class="tag">${tag}</a>`).join('')}
-            </div>
-          </div>
-          <ul class="thread__stats">
-            <li><span class="stat__label">Views</span><strong>${post.stats.views}</strong></li>
-            <li><span class="stat__label">Replies</span><strong>${post.stats.replies}</strong></li>
-            <li><span class="stat__label">Credibility</span><strong>${post.stats.credibility}</strong></li>
-          </ul>
-        `;
-        threads.appendChild(article);
-      });
-    }
-
-    function renderPagination() {
-      const pagination = document.getElementById('pagination');
-      pagination.innerHTML = '';
-      const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
-      // Prev
-      const prev = document.createElement('a');
-      prev.className = 'page' + (currentPage === 1 ? ' is-disabled' : '');
-      prev.href = '#';
-      prev.setAttribute('aria-disabled', currentPage === 1 ? 'true' : 'false');
-      prev.textContent = 'Prev';
-      prev.onclick = e => { e.preventDefault(); if(currentPage > 1){ currentPage--; renderPosts(); renderPagination(); } };
-      pagination.appendChild(prev);
-      // Pages
-      for(let i=1; i<=totalPages; i++){
-        if(i === 1 || i === totalPages || Math.abs(i-currentPage)<=1){
-          const page = document.createElement('a');
-          page.className = 'page' + (i === currentPage ? ' is-current' : '');
-          page.href = '#';
-          page.setAttribute('aria-current', i === currentPage ? 'page' : 'false');
-          page.textContent = i;
-          page.onclick = e => { e.preventDefault(); currentPage = i; renderPosts(); renderPagination(); };
-          pagination.appendChild(page);
-        }else if(i === currentPage-2 || i === currentPage+2){
-          const dots = document.createElement('span');
-          dots.className = 'page page--dots';
-          dots.textContent = '…';
-          pagination.appendChild(dots);
-        }
-      }
-      // Next
-      const next = document.createElement('a');
-      next.className = 'page' + (currentPage === totalPages ? ' is-disabled' : '');
-      next.href = '#';
-      next.setAttribute('aria-disabled', currentPage === totalPages ? 'true' : 'false');
-      next.textContent = 'Next';
-      next.onclick = e => { e.preventDefault(); if(currentPage < totalPages){ currentPage++; renderPosts(); renderPagination(); } };
-      pagination.appendChild(next);
-    }
-
-    function formatDate(dateStr){
-      const d = new Date(dateStr);
-      return d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
-    }
-  </script>
 </body>
 </html>
