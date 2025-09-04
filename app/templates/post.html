@@ -62,7 +62,7 @@
 					<p>Post not found.</p>
 				{% endif %}
 				</div>
-			<a href="{{ url_for('index') }}" class="btn" style="margin-top:18px;display:inline-block">← Back to Forum</a>
+			<a href="{{ url_for('index') }}?page={{ page }}{% if q %}&q={{ q }}{% endif %}" class="btn" style="margin-top:18px;display:inline-block">← Back to Forum</a>
 		</section>
 	</main>
 

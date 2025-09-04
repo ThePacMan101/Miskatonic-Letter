@@ -19,8 +19,8 @@
       </a>
 
 
-      <form class="search" action="#" method="get" role="search">
-        <input class="search__input" type="search" name="q" placeholder="Search theories, rituals, manifestos…" aria-label="Search" />
+      <form class="search" action="{{ url_for('index') }}" method="get" role="search">
+        <input class="search__input" type="search" name="q" value="{{ q }}" placeholder="Search theories, rituals, manifestos…" aria-label="Search" />
       </form>
 
       <nav class="usernav" aria-label="User">
@@ -70,6 +70,43 @@
           <li><span>Active</span><strong>314</strong></li>
         </ul>
       </section>
+              <nav class="pagination" aria-label="Pagination">
+          {% set pages = [1] %}
+          {% if page - 1 > 1 %}
+            {% set _ = pages.append(page - 1) %}
+          {% endif %}
+          {% if page != 1 and page != total_pages %}
+            {% set _ = pages.append(page) %}
+          {% endif %}
+          {% if page + 1 < total_pages %}
+            {% set _ = pages.append(page + 1) %}
+          {% endif %}
+          {% if total_pages > 1 %}
+            {% set _ = pages.append(total_pages) %}
+          {% endif %}
+          {% set pages = pages | unique | sort %}
+          {% if page > 1 %}
+            <a class="page" href="{{ url_for('index') }}?page={{ page - 1 }}{% if q %}&q={{ q }}{% endif %}">Prev</a>
+          {% else %}
+            <span class="page is-disabled">Prev</span>
+          {% endif %}
+          {% for p in pages %}
+          {% if p == page %}
+            <span class="page is-current">{{ p }}</span>
+          {% else %}
+            <a class="page" href="{{ url_for('index') }}?page={{ p }}{% if q %}&q={{ q }}{% endif %}">{{ p }}</a>
+          {% endif %}
+          {# Show ellipsis if there is a gap to the next page #}
+          {% if not loop.last and pages[loop.index] - p > 1 %}
+            <span class="page page--dots">…</span>
+          {% endif %}
+          {% endfor %}
+          {% if page < total_pages %}
+            <a class="page" href="{{ url_for('index') }}?page={{ page + 1 }}{% if q %}&q={{ q }}{% endif %}">Next</a>
+          {% else %}
+            <span class="page is-disabled">Next</span>
+          {% endif %}
+        </nav>
     </aside>
 
     <!-- Content -->
@@ -121,27 +158,7 @@
             </ul>
           </article>
         {% endfor %}
-      </div>
-      <nav class="pagination" aria-label="Pagination">
-        {% if page > 1 %}
-          <a class="page" href="{{ url_for('index') }}?page={{ page - 1 }}">Prev</a>
-        {% else %}
-          <span class="page is-disabled">Prev</span>
-        {% endif %}
-        {% for p in range(1, total_pages + 1) %}
-          {% if p == page %}
-            <span class="page is-current">{{ p }}</span>
-          {% else %}
-            <a class="page" href="{{ url_for('index') }}?page={{ p }}">{{ p }}</a>
-          {% endif %}
-        {% endfor %}
-        {% if page < total_pages %}
-          <a class="page" href="{{ url_for('index') }}?page={{ page + 1 }}">Next</a>
-        {% else %}
-          <span class="page is-disabled">Next</span>
-        {% endif %}
-      </nav>
-      </nav>
+        </div>
     </section>
   </main>
 
