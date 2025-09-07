@@ -84,7 +84,7 @@
           {% endif %}
           {% set pages = pages | unique | sort %}
           {% if page > 1 %}
-            <a class="page" href="{{ url_for('get_posts') }}?page={{ page - 1 }}{% if q %}&q={{ q }}{% endif %}">Prev</a>
+            <a class="page" href="{{ url_for('get_posts') }}?page={{ page - 1 }}{% if q %}&q={{ q }}{% endif %}{% if badge %}&badge={{ badge }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}">Prev</a>
           {% else %}
             <span class="page is-disabled">Prev</span>
           {% endif %}
@@ -92,7 +92,7 @@
           {% if p == page %}
             <span class="page is-current">{{ p }}</span>
           {% else %}
-            <a class="page" href="{{ url_for('get_posts') }}?page={{ p }}{% if q %}&q={{ q }}{% endif %}">{{ p }}</a>
+            <a class="page" href="{{ url_for('get_posts') }}?page={{ p }}{% if q %}&q={{ q }}{% endif %}{% if badge %}&badge={{ badge }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}">{{ p }}</a>
           {% endif %}
           {# Show ellipsis if there is a gap to the next page #}
           {% if not loop.last and pages[loop.index] - p > 1 %}
@@ -100,7 +100,7 @@
           {% endif %}
           {% endfor %}
           {% if page < total_pages %}
-            <a class="page" href="{{ url_for('get_posts') }}?page={{ page + 1 }}{% if q %}&q={{ q }}{% endif %}">Next</a>
+            <a class="page" href="{{ url_for('get_posts') }}?page={{ page + 1 }}{% if q %}&q={{ q }}{% endif %}{% if badge %}&badge={{ badge }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}">Next</a>
           {% else %}
             <span class="page is-disabled">Next</span>
           {% endif %}
@@ -111,18 +111,28 @@
     <section class="content">
       <div class="bar">
         <div class="chips">
-          <button class="chip is-selected">Latest</button>
-          <button class="chip">Unhinged</button>
-          <button class="chip">Occult</button>
-          <button class="chip">Extremes</button>
+          {% for badge in popular_badges %}
+            <a
+              class="chip{% if request.query_params.get('badge') == badge.label %} is-selected{% endif %}"
+              href="{{ url_for('get_posts') }}?badge={{ badge.label }}{% if q %}&q={{ q }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}"
+            >{{ badge.title }}</a>
+          {% endfor %}
+          <a
+            class="chip{% if not request.query_params.get('badge') %} is-selected{% endif %}"
+            href="{{ url_for('get_posts') }}{% if q %}?q={{ q }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}"
+          >All</a>
         </div>
         <div class="filters">
           <label class="select">
             <span class="select__label">Sort</span>
-            <select>
-              <option>Newest</option>
-              <option>Views</option>
-            </select>
+              <form class="search" action="{{ url_for('get_posts') }}" method="get" role="search">
+                <input type="hidden" name="q" value="{{ q }}">
+                <input type="hidden" name="page" value="{{ page }}">
+                <select name="sort" onchange="this.form.submit()">
+                  <option value="newest" {% if request.query_params.get('sort', 'newest') == 'newest' %}selected{% endif %}>Newest</option>
+                  <option value="views" {% if request.query_params.get('sort') == 'views' %}selected{% endif %}>Views</option>
+                </select>
+              </form>
           </label>
         </div>
       </div>

@@ -52,37 +52,7 @@ def get_db():
     finally:
         db.close()
 
-def serialize_post_face(post, db):
-    author = db.query(Users).filter_by(user_id=post.author_id).first()
-    badge = db.query(Badges).filter_by(badge_id=post.badge_id).first()
-    tag_ids = db.query(PostsTags).filter_by(post_id=post.post_id).all()
-    tags = []
-    for pt in tag_ids:
-        tag = db.query(Tags).filter_by(tag_id=pt.tag_id).first()
-        if tag:
-            tags.append(tag.tag_lable)
-    return {
-        "id": post.post_id,
-        "title": post.post_title,
-        "exerpt": post.post_exerpt,
-        "date": post.post_date,
-        "author": {
-            "name": author.user_name if author else "",
-            "avatar": author.user_avatar if author else "",
-        },
-        "badge": {
-            "label": badge.badge_lable.upper() if badge else "",
-            "title": badge.badge_title if badge else "",
-        },
-        "tags": tags,
-        "stats": {
-            "views": post.post_views,
-            "replies": post.post_replies,
-            "credibility": post.post_credibility,
-        }
-    }
-
-def serialize_post_content(post,db):
+def serialize_post(post,db):
     author = db.query(Users).filter_by(user_id=post.author_id).first()
     badge = db.query(Badges).filter_by(badge_id=post.badge_id).first()
     tag_ids = db.query(PostsTags).filter_by(post_id=post.post_id).all()
@@ -111,4 +81,11 @@ def serialize_post_content(post,db):
             "replies": post.post_replies,
             "credibility": post.post_credibility,
         }
+    }
+
+def serialize_badge(badge):
+    return {
+        "id":badge.badge_id,
+        "title":badge.badge_title,
+        "label":badge.badge_lable
     }
