@@ -119,7 +119,7 @@
           {% endfor %}
           <a
             class="chip{% if not request.query_params.get('badge') %} is-selected{% endif %}"
-            href="{{ url_for('get_posts') }}{% if q %}?q={{ q }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}"
+            href="{{ url_for('get_posts') }}{% if q %}?q={{ q }}{% endif %}{% if page %}?page={{ page }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}"
           >All</a>
         </div>
         <div class="filters">
