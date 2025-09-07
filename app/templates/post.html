@@ -29,7 +29,7 @@
 					<article class="thread card" role="article">
 					<div class="thread__main">
 						<div class="thread__row">
-						<span class="badge badge--{{ post.badge.type }}" title="{{ post.badge.title }}">{{ post.badge.label }}</span>
+						<span class="badge badge--{{ post.badge.label }}" title="{{ post.badge.title }}">{{ post.badge.label }}</span>
 						<span class="thread__title">{{ post.title }}</span>
 						</div>
 						<div class="thread__meta">
@@ -44,11 +44,9 @@
 						{% endfor %}
 						</div>
 						<hr style="border:1px solid #333;margin:10px 0;">
-						<div class="thread__excerpt">{{ post.content[0] }}</div>
+						<div class="thread__excerpt">{{ post.excerpt }}</div>
 						<div class="thread__content" style="margin-top:10px;">
-						{% for line in post.content[1:] %}
-							<div>{{ line }}</div>
-						{% endfor %}
+						{{ post.content }}
 						</div>
 					</div>
 					<ul class="thread__stats">
@@ -61,7 +59,6 @@
 					<p>Post not found.</p>
 				{% endif %}
 				</div>
-			<a href="{{ url_for('get_posts') }}?page={{ page }}{% if q %}&q={{ q }}{% endif %}" class="btn" style="margin-top:18px;display:inline-block">← Back to Forum</a>
 		</section>
 	</main>
 
