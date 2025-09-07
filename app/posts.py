@@ -21,7 +21,7 @@ async def get_posts(
     db:Session = Depends(get_db)
 ):
     POSTS_PER_PAGE = 5
-    POPULAR_BADGE_COUNT = 3
+    POPULAR_BADGE_COUNT = 7
     posts = db.query(Posts)
     if badge:
         badge_query = db.query(Badges).filter(func.upper(Badges.badge_lable)==badge.upper()).first()
