@@ -8,7 +8,7 @@
 <body>
 	<header class="topbar">
 		<div class="container topbar__inner">
-			<a class="brand" href="{{ url_for('index') }}">
+			<a class="brand" href="{{ url_for('get_posts') }}">
 				<img src="{{ url_for('static', path='imgs/elder-sign.png') }}" alt="" class="brand__logo" aria-hidden="true">
 				<span class="brand__name">Miskatonic<span class="accent">Letter</span></span>
 			</a>
@@ -61,7 +61,7 @@
 					<p>Post not found.</p>
 				{% endif %}
 				</div>
-			<a href="{{ url_for('index') }}?page={{ page }}{% if q %}&q={{ q }}{% endif %}" class="btn" style="margin-top:18px;display:inline-block">← Back to Forum</a>
+			<a href="{{ url_for('get_posts') }}?page={{ page }}{% if q %}&q={{ q }}{% endif %}" class="btn" style="margin-top:18px;display:inline-block">← Back to Forum</a>
 		</section>
 	</main>
 

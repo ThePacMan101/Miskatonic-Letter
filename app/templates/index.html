@@ -10,13 +10,13 @@
     <div class="container topbar__inner">
 
       <!-- LOGO -->
-      <a class="brand" href="{{ url_for('index') }}">
+      <a class="brand" href="{{ url_for('get_posts') }}">
         <img src="{{ url_for('static', path='imgs/elder-sign.png') }}" alt="" class="brand__logo" aria-hidden="true">
         <span class="brand__name">Miskatonic<span class="accent">Letter</span></span>
       </a>
 
       <!-- SEARCH BAR -->
-      <form class="search" action="{{ url_for('index') }}" method="get" role="search">
+      <form class="search" action="{{ url_for('get_posts') }}" method="get" role="search">
         <input class="search__input" type="search" name="q" value="{{ q }}" placeholder="Search theories, rituals, manifestos…" aria-label="Search" />
       </form>
 
@@ -84,7 +84,7 @@
           {% endif %}
           {% set pages = pages | unique | sort %}
           {% if page > 1 %}
-            <a class="page" href="{{ url_for('index') }}?page={{ page - 1 }}{% if q %}&q={{ q }}{% endif %}">Prev</a>
+            <a class="page" href="{{ url_for('get_posts') }}?page={{ page - 1 }}{% if q %}&q={{ q }}{% endif %}">Prev</a>
           {% else %}
             <span class="page is-disabled">Prev</span>
           {% endif %}
@@ -92,7 +92,7 @@
           {% if p == page %}
             <span class="page is-current">{{ p }}</span>
           {% else %}
-            <a class="page" href="{{ url_for('index') }}?page={{ p }}{% if q %}&q={{ q }}{% endif %}">{{ p }}</a>
+            <a class="page" href="{{ url_for('get_posts') }}?page={{ p }}{% if q %}&q={{ q }}{% endif %}">{{ p }}</a>
           {% endif %}
           {# Show ellipsis if there is a gap to the next page #}
           {% if not loop.last and pages[loop.index] - p > 1 %}
@@ -100,7 +100,7 @@
           {% endif %}
           {% endfor %}
           {% if page < total_pages %}
-            <a class="page" href="{{ url_for('index') }}?page={{ page + 1 }}{% if q %}&q={{ q }}{% endif %}">Next</a>
+            <a class="page" href="{{ url_for('get_posts') }}?page={{ page + 1 }}{% if q %}&q={{ q }}{% endif %}">Next</a>
           {% else %}
             <span class="page is-disabled">Next</span>
           {% endif %}
@@ -132,10 +132,10 @@
           <article class="thread card" role="article">
             <div class="thread__main">
               <div class="thread__row">
-                <span class="badge badge--{{ post.badge.type }}" title="{{ post.badge.title }}">{{ post.badge.label }}</span>
-                <a href="{{ url_for('post_detail', id=post.id) }}" class="thread__title" data-id="{{ post.id }}">{{ post.title }}</a>
+                <span class="badge badge--{{ post.badge.label }}" title="{{ post.badge.title }}">{{ post.badge.label }}</span>
+                <a href="{{ url_for('get_post', id=post.id) }}" class="thread__title" data-id="{{ post.id }}">{{ post.title }}</a>
               </div>
-              <p class="thread__excerpt">{{ post.content[0] }}</p>
+              <p class="thread__excerpt">{{ post.exerpt }}</p>
               <div class="thread__meta">
                 <span class="author">
                   <span class="avatar" aria-hidden="true">{{ post.author.avatar }}</span>

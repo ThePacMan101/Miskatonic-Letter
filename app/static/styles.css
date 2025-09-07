@@ -312,11 +312,17 @@ select {
   text-align: center;
   margin-right: 4px;
 }
-.badge--db    { background: #111; color: #0ff; border-color: #0ff; }
-.badge--cred  { background: #111; color: #ff0; border-color: #ff0; }
-.badge--news  { background: #111; color: #f0f; border-color: #f0f; }
-.badge--dump  { background: #111; color: #f00; border-color: #f00; }
-.badge--guide { background: #111; color: #0f0; border-color: #0f0; }
+.badge--TECH    { background: #111; color: #4fd1c5; border-color: #4fd1c5; } /* cyan / teal */
+.badge--OCCULT  { background: #111; color: #f6e05e; border-color: #f6e05e; } /* soft gold */
+.badge--PARA    { background: #111; color: #d53f8c; border-color: #d53f8c; } /* vivid magenta */
+.badge--EXTREME { background: #111; color: #f56565; border-color: #f56565; } /* strong red */
+.badge--CONSP   { background: #111; color: #68d391; border-color: #68d391; } /* fresh green */
+.badge--QUEST   { background: #111; color: #63b3ed; border-color: #63b3ed; } /* bright sky blue */
+.badge--META    { background: #111; color: #9f7aea; border-color: #9f7aea; } /* soft violet */
+.badge--MYTH    { background: #111; color: #ed64a6; border-color: #ed64a6; } /* pinkish purple */
+.badge--SOCIETY { background: #111; color: #f6ad55; border-color: #f6ad55; } /* warm amber */
+
+
 
 /* Pagination */
 .pagination {
