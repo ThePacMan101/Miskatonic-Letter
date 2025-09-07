@@ -15,8 +15,10 @@ def insert_posts_from_json(db_path, json_path):
             cursor.execute("SELECT user_id FROM Users WHERE user_name = ?", (user['user_name'],))
             user_id = cursor.fetchone()
             if not user_id:
-                cursor.execute("INSERT INTO Users (user_avatar, user_name) VALUES (?, ?)",
-                               (user['user_avatar'], user['user_name']))
+                cursor.execute(
+                    "INSERT INTO Users (user_avatar, user_name) VALUES (?, ?)",
+                    (user['user_avatar'], user['user_name'])
+                )
                 user_id = cursor.lastrowid
             else:
                 user_id = user_id[0]
@@ -28,8 +30,10 @@ def insert_posts_from_json(db_path, json_path):
                 cursor.execute("SELECT badge_id FROM Badges WHERE badge_lable = ?", (badge['badge_lable'],))
                 badge_id = cursor.fetchone()
                 if not badge_id:
-                    cursor.execute("INSERT INTO Badges (badge_title, badge_lable) VALUES (?, ?)",
-                                   (badge['badge_title'], badge['badge_lable']))
+                    cursor.execute(
+                        "INSERT INTO Badges (badge_title, badge_lable) VALUES (?, ?)",
+                        (badge['badge_title'], badge['badge_lable'])
+                    )
                     badge_id = cursor.lastrowid
                 else:
                     badge_id = badge_id[0]
@@ -54,7 +58,7 @@ def insert_posts_from_json(db_path, json_path):
             post_id = cursor.lastrowid
 
             # Gerenciar a criação e associação de Tags
-            tags = post.get('tags', [])
+            tags = list(set(post.get('tags', [])))  # remove duplicatas
             for tag_label in tags:
                 cursor.execute("SELECT tag_id FROM Tags WHERE tag_lable = ?", (tag_label,))
                 tag_id = cursor.fetchone()
@@ -64,8 +68,11 @@ def insert_posts_from_json(db_path, json_path):
                 else:
                     tag_id = tag_id[0]
                 
-                # Inserir na tabela de junção PostsTags
-                cursor.execute("INSERT INTO PostsTags (post_id, tag_id) VALUES (?, ?)", (post_id, tag_id))
+                # Inserir na tabela de junção PostsTags (evita erro de duplicata)
+                cursor.execute(
+                    "INSERT OR IGNORE INTO PostsTags (post_id, tag_id) VALUES (?, ?)",
+                    (post_id, tag_id)
+                )
 
         conn.commit()
         print("Dados inseridos com sucesso!")
@@ -78,6 +85,7 @@ def insert_posts_from_json(db_path, json_path):
         conn.rollback()
     finally:
         conn.close()
+
 
 # Exemplo de uso:
 if __name__ == '__main__':
