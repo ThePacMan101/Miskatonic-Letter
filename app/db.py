@@ -26,6 +26,7 @@ class Users(Base):
     user_id          = Column(Integer,primary_key=True,index=True)
     user_avatar      = Column(String(2))
     user_name        = Column(String)
+    user_password    = Column(String)
 
 class Badges(Base):
     __tablename__    = "Badges"
