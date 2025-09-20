@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Miskatonic Letter · Post</title>
+	<link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}" />
+</head>
+<body>
+	<header class="topbar">
+		<div class="container topbar__inner">
+			<a class="brand" href="{{ url_for('get_posts') }}">
+				<img src="{{ url_for('static', path='imgs/elder-sign.png') }}" alt="" class="brand__logo" aria-hidden="true">
+				<span class="brand__name">Miskatonic<span class="accent">Letter</span></span>
+			</a>
+		</div>
+	</header>
+
+	<main class="container layout">
+		<!-- CONTENT -->
+	</main>
+
+	<footer class="footer">
+		<div class="container footer__inner">
+			<p>© 1994 Miskatonic Letter.</p>
+			<nav class="footer__links">
+				<a href="#">Forum Charter</a>
+				<a href="#">Occult FAQ</a>
+				<a href="#">Contact the Admins</a>
+			</nav>
+		</div>
+	</footer>
+</body>
+</html>
