@@ -327,20 +327,20 @@ select {
 /* Pagination */
 .pagination {
   display: flex;
-  gap: 6px;
+  gap: 2px;
   margin: 16px 0 4px;
 }
 .page {
   display: inline-block;
-  min-width: 32px;
-  height: 32px;
+  min-width: 24px;        
+  height: 24px;           
   background: #222;
   color: #0ff;
   border: 1px solid #0ff;
   font-family: 'Courier New', Courier, monospace;
-  font-size: 14px;
+  font-size: 12px;        
   text-align: center;
-  line-height: 32px;
+  line-height: 24px;      
   text-decoration: none;
 }
 .page.is-current {
