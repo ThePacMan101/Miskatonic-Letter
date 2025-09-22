@@ -17,11 +17,11 @@
 
       <!-- SEARCH BAR -->
       <form class="search" action="{{ url_for('get_posts') }}" method="get" role="search">
-        <input class="search__input" type="search" name="q" value="{{ q }}" placeholder="Search theories, rituals, manifestos…" aria-label="Search" />
+        <input class="search__input" type="search" name="q" value="{{ q }}" placeholder="Search theories, rituals, manifestos…"/>
       </form>
 
       <!-- LOGIN/REGISTER -->
-      <nav class="usernav" aria-label="User">
+      <nav class="usernav">
         <a class="btn btn--primary" href="{{ url_for('login') }}">Join the Circle</a>
       </nav>
     </div>
@@ -54,7 +54,7 @@
           <li><span>Active</span><strong>314</strong></li>
         </ul>
       </section>
-              <nav class="pagination" aria-label="Pagination">
+              <nav class="pagination">
           {% set pages = [1] %}
           {% if page - 1 > 1 %}
             {% set _ = pages.append(page - 1) %}
