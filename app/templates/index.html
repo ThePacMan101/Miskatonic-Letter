@@ -149,7 +149,7 @@
               <div class="thread__meta">
                 <span class="author">
                   <span class="avatar" aria-hidden="true">{{ post.author.avatar }}</span>
-                  <a href="#" class="author__name">{{ post.author.name }}</a>
+                  <a href="{{ url_for('get_posts') }}?badge={{ badge.label }}&q={{ post.author.name }}{% if sort %}&sort={{ sort }}{% endif %}" class="author__name">{{ post.author.name }}</a>
                 </span>
                 <time datetime="{{ post.date }}">{{ post.date }}</time>
                 <span class="dot" aria-hidden="true">•</span>
